@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #141E30, #243B55);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            backdrop-filter: blur(15px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-picture {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            margin: 0 auto;
+            border: 5px solid #ffffff;
+            background-image: url('https://pomf2.lain.la/f/4tdc1bba.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .name {
+            margin-top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .description {
+            font-size: 15px;
+            margin-top: 5px;
+            color: #e0e0e0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            color: #ffffff;
+            font-size: 24px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.2);
+        }
+
+        .music-player {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .music-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: #ffffff;
+            height: 8px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress {
+            background-color: #00bcd4;
+            width: 0%;
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            background: #ff9800;
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .play-button:hover {
+            background-color: #ff5722;
+            transform: scale(1.1);
+        }
+
+        audio {
+            display: none;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #dddddd;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: url('https://pomf2.lain.la/f/czmsja1.jpg') repeat;
+            background-size: cover;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        /* New keyframes for glowing effect */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #ff5722; }
+            50% { box-shadow: 0 0 15px #ff5722; }
+            100% { box-shadow: 0 0 5px #ff5722; }
+        }
+
+        .play-button {
+            animation: glow 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="profile-container">
+        <div class="profile-picture"></div>
+        <div class="name">Line Dev</div>
+        <div class="description">Web Developer | Music Lover</div>
+
+        <!-- Social Media Icons -->
+        <div class="social-icons">
+            <a href="https://wa.me/6285710230711" target="_blank">
+                <img src="https://img.icons8.com/color/48/000000/whatsapp.png" alt="WhatsApp" />
+            </a>
+            <a href="https://www.youtube.com/@LineAja-d5s" target="_blank">
+                <img src="https://img.icons8.com/color/48/000000/youtube-play.png" alt="YouTube" />
+            </a>
+            <a href="https://github.com/LineShare352" target="_blank">
+                <img src="https://img.icons8.com/color/48/000000/github--v1.png" alt="GitHub" />
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vag4bmkEKyZEFU3CsH29" target="_blank">
+                <img src="https://img.icons8.com/color/48/000000/signal-app.png" alt="Channel" />
+            </a>
+        </div>
+
+        <!-- Music Player -->
+        <div class="music-player">
+            <div class="music-title" id="music-title">JKT48 - Seventeen (Color Coded Lyrics)</div>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <button id="playPauseButton" class="play-button">&#9658;</button>
+            <audio id="audio" src="/storage/emulated/0/Download/JKT48 - Seventeen  Color Coded Lyrics.mp3"></audio>
+        </div>
+
+        <div class="footer">
+            &copy; 2024 Line Dev | All Rights Reserved
+        </div>
+    </div>
+
+    <script>
+        // Music player functionality
+        const audio = document.getElementById('audio');
+        const playPauseButton = document.getElementById('playPauseButton');
+        const progressBar = document.getElementById('progress');
+
+        // Toggle play/pause on button click
+        playPauseButton.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseButton.innerHTML = '&#10074;&#10074;'; // Change to pause icon
+            } else {
+                audio.pause();
+                playPauseButton.innerHTML = '&#9658;'; // Change to play icon
+            }
+        });
+
+        // Update progress bar as the audio plays
+        audio.addEventListener('timeupdate', () => {
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = progressPercent + '%';
+        });
+
+        // Reset player when audio ends
+        audio.addEventListener('ended', () => {
+            playPauseButton.innerHTML = '&#9658;'; // Change to play icon
+            progressBar.style.width = '0%'; // Reset progress bar
+        });
+    </script>
+</body>
+</html>
